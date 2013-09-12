@@ -1,0 +1,3 @@
+class AreaOfWork < Item
+
+end

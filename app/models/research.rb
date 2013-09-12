@@ -1,0 +1,3 @@
+class Research < Item
+
+end

@@ -1,0 +1,15 @@
+<h1>WE Home</h1>
+
+<h3>Areas Of Work</h3>
+<ul>
+  <% AreaOfWork.categories.each do |area_of_work| %>
+    <li><%= link_to area_of_work.title, item_path(area_of_work) %></li>
+  <% end %>
+</ul>
+
+<h3>Services We Provide</h3>
+<ul>
+  <% Service.categories.each do |service| %>
+    <li><%= link_to service.title, item_path(service) %></li>
+  <% end %>
+</ul>
