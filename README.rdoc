@@ -1,28 +1,45 @@
-== README
+ABOUT THIS REPO
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+I created this repo to demonstrate how I would model a prospective employer's website (let's call them 'WE', an acronym of their name).
 
-Things you may want to cover:
+WE is a nonprofit research and development agency focused on education.  Their website is strictly informational but has some complexities...
 
-* Ruby version
+There are several types of information on the site that all relate to each other: Areas Of Work, Services, News, Events, Programs, Projects, Resources (digital products for sale), Research, and People (staff, users and authors).  For example, a service can be related to an area of work, and vice versa.  That service also has related resources, news, events, staff, etc. Nearly every view of the app reveals these relationships.
 
-* System dependencies
+There are also categories of information. For example, "Policy" is a category of a specific group of Services.
 
-* Configuration
+With the exception of People (staff, users, etc.), all types of information share a set of core attributes: title, body (description, html, etc), is_category (whether they are a category or not), and position (what sort position an item should appear in in a list).
 
-* Database creation
+There are a few attributes that are specific to a type.  For example, Events have dates and times, products have prices, etc.
 
-* Database initialization
+I decided the best approach would be to create a single table for all of these 'items' and then use single table inheritance to differentiate them.  Single table inheritance is when several models (research, service, etc) all inherit from the same model (in this case, 'item').  Likewise, they are all stored in the same table and are differentiated by a Rails 'type' attribute.  This allows me to easily find all Services, for example, by using Services.all.
 
-* How to run the test suite
+In order to track the relationships between items, I created a table called item_relationships which, aside from timestamps, only includes two integer-type fields; one for item A and one for item B (there is no primary key or id in this table). This way I can create relationships between any two items.  After relationships are established, I can easily query them for the view, by subclass (i.e. type).
 
-* Services (job queues, cache servers, search engines, etc.)
+For example, if I want to find related Services for a particular Area Of Work, I would use item.items.where(:type => 'Service').
 
-* Deployment instructions
+The web site also uses parameterized urls, for example:
 
-* ...
+http://www.we.org/service/analyses-of-pending-or-current-legislation
+
+To do this in Rails, I added a 'slug' column to the items table to store a parameterized version of the item's title.  When the item is saved, the slug is automatically generated (using a before_validiation method in the item model).  The slug must be unique by type, so I added a custom validation that checks for that.
+
+Building out the rest of the model would require a 'users' table that included administrators of the website, general staff members of the organization, as well as author names of people who might not be staff.
+
+Another major component of the site is the bookstore cart integration but I limited the scope of this demonstration to the information type modeling.
+
+NOTE: The only parts worth looking at in this repo are the models (particularly item.rb and item_relationship.rb) and the views for some context.
 
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+
+
+
+
+
+
+
+
+
+
+
+
